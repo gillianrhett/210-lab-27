@@ -49,16 +49,17 @@ int main() {
     auto it = villagerData.find(searchKey);
     if (it != villagerData.end()) {  // the iterator points to beyond the end of the map
                                        // if searchKey is not found
-        cout << "\nFound " << searchKey << "'s data: " << endl;
-        cout << "Friendship level is " << get<0>(it->second) << endl;
-        cout << endl;
-    } else
+        cout << "\nFound " << searchKey << "'s data: friendship level is " << get<0>(it->second) 
+        << ", species is " << get<1>(it->second) << ", and catchphrase is " << get<2>(it->second) 
+        << "." << endl;
+    } 
+    else
         cout << endl << searchKey << " not found." << endl;
-    /* commenting out not-done-yet part to test the above parts
+    
     // report size, clear, report size again to confirm map operations
     cout << "\nSize before clear: " << villagerData.size() << endl;
     villagerData.clear();
     cout << "Size after clear: " << villagerData.size() << endl;
-*/
+
     return 0;
 }
