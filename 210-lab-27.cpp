@@ -16,28 +16,23 @@ int main() {
 
     // access the map using a range-based for loop
     cout << "Villagers and their friendship level, species, and catchphrase (range-based for loop):" << endl;
-    for (auto pair : villagerData) {
-        cout << pair.first << ": "; // this is the key, which is the villager's
-        for (const auto& [name, data] : villagerData) {
-            const auto& [friendship, species, catchphrase] = data;
-            cout << name << "'s friendship level is " << friendship 
-            << ", species is " << species 
-            << ", and catchphrase is " << catchphrase << endl;
-        }
-        cout << endl;
+    for (const auto& [name, data] : villagerData) {
+        const auto& [friendship, species, catchphrase] = data;
+        cout << "\t" << name << "'s friendship level is " << friendship 
+        << ", species is " << species 
+        << ", and catchphrase is " << catchphrase << "." << endl;
     }
-/* commenting out not-done-yet part to test the above parts
+    cout << endl;
+
     // access the map using iterators
-    cout << "\nVillagers and their favorite colors (iterators):" << endl;
-    for (map<string, vector<string>>::iterator it = villagerData.begin(); 
-                                               it != villagerData.end(); ++it) {
-        cout << it->first << ": ";
-        for (auto color : it->second) {
-            cout << color << " ";
-        }
+    cout << "\nVillagers and their friendship level, species, and catchphrase (iterators):" << endl;
+    for (map<string, tuple<int, string, string>>::iterator it = villagerData.begin(); it != villagerData.end(); ++it){
+        cout << "\t" << it->first << "'s friendship level is" << it->second.at(0) << ", species is " << endl;
+    }
         cout << endl;
     }
 
+/* commenting out not-done-yet part to test the above parts
     // delete an element
     villagerData.erase("Raymond");
 
