@@ -1,7 +1,7 @@
 // COMSC 210 | Lab 27 | Gillian Rhett
 #include <iostream>
 #include <map>
-#include <vector>
+#include <tuple>
 using namespace std;
 
 int main() {
@@ -17,12 +17,16 @@ int main() {
     // access the map using a range-based for loop
     cout << "Villagers and their friendship level, species, and catchphrase (range-based for loop):" << endl;
     for (auto pair : villagerData) {
-        cout << pair.first << ": ";
-        for (auto color : pair.second) // this was a vector, need to change it for tuple
-            cout << color << " ";
+        cout << pair.first << ": "; // this is the key, which is the villager's
+        for (const auto& [name, data] : villagerData) {
+            const auto& [friendship, species, catchphrase] = data;
+            cout << name << "'s friendship level is " << friendship 
+            << ", species is " << species 
+            << ", and catchphrase is " << catchphrase << endl;
+        }
         cout << endl;
     }
-
+/* commenting out not-done-yet part to test the above parts
     // access the map using iterators
     cout << "\nVillagers and their favorite colors (iterators):" << endl;
     for (map<string, vector<string>>::iterator it = villagerData.begin(); 
@@ -53,6 +57,6 @@ int main() {
     cout << "\nSize before clear: " << villagerData.size() << endl;
     villagerData.clear();
     cout << "Size after clear: " << villagerData.size() << endl;
-
+*/
     return 0;
 }
