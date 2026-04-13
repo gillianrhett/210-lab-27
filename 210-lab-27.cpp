@@ -10,6 +10,8 @@ int menu();
 void changeFriendship(map<string, tuple<int, string, string>>&, string, int);
 string searchForVillager(const map<string, tuple<int, string, string>>&);
 void displayVillagerDetails(map<string, tuple<int, string, string>>&);
+void addVillager(map<string, tuple<int, string, string>>&);
+void deleteVillager(map<string, tuple<int, string, string>>&, string);
 
 int main() {
     // declarations
@@ -23,21 +25,31 @@ int main() {
     villagerData.insert({"Hamlet", make_tuple(10, "Hamster", "hammy")});
 
     int choice = 1;
-    while((1 <= choice && choice < 4)) {
+    while((1 <= choice && choice < 6)) {
         choice = menu();
         if (choice == 1) {
+        // Add a villager
+            addVillager(villagerData);
+        }
+        if (choice == 2) {
+        // Delete a villager
+            string name = searchForVillager(villagerData);
+            if (name != "")
+                deleteVillager(villagerData, name);
+        }
+        if (choice == 3) {
         // Increase friendship for a given villager
             string name = searchForVillager(villagerData);
             if (name != "")
                 changeFriendship(villagerData, name, 1);
         }
-        if (choice == 2) {
-        // Decrease friendship
+        if (choice == 4) {
+        // Decrease friendship for a given villager
             string name = searchForVillager(villagerData);
             if (name != "")
                 changeFriendship(villagerData, name, -1);
         }
-        if (choice == 3) {
+        if (choice == 5) {
         // Search for vilager
             string name = searchForVillager(villagerData);
             if (name != "")
@@ -45,7 +57,7 @@ int main() {
             else
                 cout << name << "not found." << endl;
         }
-        if (choice == 4)
+        if (choice == 6)
             cout << "Goodbye." << endl;
         
         // display the map contents after each operation
@@ -106,13 +118,14 @@ int main() {
 int menu() {
 // display the menu and return the choice the user picked
     int choice = 0;
-    cout << "1. Increase Friendship\n2. Decrease Friendship\n3. Search for Villager\n4. Exit" << endl;
+    cout << "1. Add villager\n2. Delete villager\n 3. Increase Friendship"
+    << "\n4. Decrease Friendship\n5. Search for Villager\n6. Exit" << endl;
     cout << "Enter your choice: ";
-    while (!(choice >= 1 && choice <=4)) {
+    while (!(choice >= 1 && choice <=6)) {
         try {
             cin >> choice;
-            if (cin.fail() || !(choice >= 1 && choice <=4))
-                throw invalid_argument("Invalid input. Enter a number 1, 2, 3, or 4.");
+            if (cin.fail() || !(choice >= 1 && choice <=6))
+                throw invalid_argument("Invalid input. Enter a number 1, 2, 3, 4, 5, or 6.");
         }
         catch(invalid_argument& e)
         {
@@ -162,4 +175,39 @@ void displayVillagerDetails(map<string, tuple<int, string, string>>& m) { // I w
         cout << "\t" << it->first << "'s friendship level is " << get<0>(it->second) << ", species is " << get<1>(it->second) << ", and catchphrase is " << get<2>(it->second) << "." << endl;
     }
     cout << endl;
+}
+
+void addVillager(map<string, tuple<int, string, string>>& m) {
+// get user input to add a new villager to the map
+    string name;
+    int friendship = -1;
+    string species;
+    string catchphrase;
+    cout << "Enter name: ";
+    cin >> name;
+    cout << "Enter friendship level: ";
+    while (friendship < 0) {
+        try {
+            cin >> friendship;
+            if (cin.fail() || friendship < 0)
+                throw invalid_argument("Invalid input. Enter a number greater than or equal to zero: ");
+        }
+        catch(invalid_argument& e)
+        {
+            cout << "Error: " << e.what() << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+    
+}
+
+void deleteVillager(map<string, tuple<int, string, string>>& m, string name) {
+// delete the villager with the name given
+    auto it = m.find(name);
+    if (it != m.end()) // Key exists, safe to use .at()
+        m.erase(name);
+    else
+    // name not found; this part is only necessary if we call this without first calling SearchForVillager
+        cout << name << " not found." << endl;
 }
