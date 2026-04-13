@@ -63,54 +63,6 @@ int main() {
         displayVillagerDetails(villagerData);
     }
 
-    /* from milestone 2
-    // access the map using a range-based for loop
-    cout << "Villagers and their friendship level, species, and catchphrase (range-based for loop):" << endl;
-    for (const auto& [name, data] : villagerData) {
-        const auto& [friendship, species, catchphrase] = data;
-        cout << "\t" << name << "'s friendship level is " << friendship 
-        << ", species is " << species 
-        << ", and catchphrase is " << catchphrase << "." << endl;
-    }
-    cout << endl;
-
-    // access the map using iterators
-    cout << "\nVillagers and their friendship level, species, and catchphrase (iterators):" << endl;
-    for (map<string, tuple<int, string, string>>::iterator it = villagerData.begin(); 
-        it != villagerData.end(); ++it) 
-    {
-        cout << "\t" << it->first << "'s friendship level is " << get<0>(it->second) << ", species is " << get<1>(it->second) << ", and catchphrase is " << get<2>(it->second) << "." << endl;
-    }
-    cout << endl;
-
-    // delete an element
-    villagerData.erase("Raymond");
-    // access the map using iterators
-    cout << "\nNew list of villagers after deletion:" << endl;
-    for (map<string, tuple<int, string, string>>::iterator it = villagerData.begin(); 
-        it != villagerData.end(); ++it) 
-    {
-        cout << "\t" << it->first << endl;
-    }
-    cout << endl;
-
-    // search for an element using .find() to avoid errors
-    string searchKey = "Audie";
-    auto it = villagerData.find(searchKey);
-    if (it != villagerData.end()) {  // the iterator points to beyond the end of the map
-                                       // if searchKey is not found
-        cout << "\nFound " << searchKey << "'s data: friendship level is " << get<0>(it->second) 
-        << ", species is " << get<1>(it->second) << ", and catchphrase is " << get<2>(it->second) 
-        << "." << endl;
-    } 
-    else
-        cout << endl << searchKey << " not found." << endl;
-    
-    // report size, clear, report size again to confirm map operations
-    cout << "\nSize before clear: " << villagerData.size() << endl;
-    villagerData.clear();
-    cout << "Size after clear: " << villagerData.size() << endl;
-    */
     return 0;
 }
 
@@ -140,7 +92,8 @@ void changeFriendship(map<string, tuple<int, string, string>>& m, string name, i
 // change this villager's friendship by the given amount
     auto it = m.find(name);
     if (it != m.end()) { // Key exists, safe to use .at()
-        if(get<0>(m.at(name)) + amt >= 0 || get<0>(m.at(name)) + amt > 10) // make sure this change won't make friendship negative
+        if(get<0>(m.at(name)) + amt >= 0 || get<0>(m.at(name)) + amt > 10)
+        // make sure the change won't put friendship out of its valid range
             get<0>(m.at(name)) += amt;
         else
             cout << "Error: friendship can only be 0 to 10." << endl;
@@ -212,7 +165,7 @@ void addVillager(map<string, tuple<int, string, string>>& m) {
 void deleteVillager(map<string, tuple<int, string, string>>& m, string name) {
 // delete the villager with the name given
     auto it = m.find(name);
-    if (it != m.end()) // Key exists, safe to use .at()
+    if (it != m.end()) // this name is in the map, so it can be deleted
         m.erase(name);
     else
     // name not found; this part is only necessary if we call this without first calling SearchForVillager
