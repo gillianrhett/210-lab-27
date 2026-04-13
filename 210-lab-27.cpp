@@ -9,7 +9,7 @@ using namespace std;
 int menu();
 void changeFriendship(map<string, tuple<int, string, string>>&, string, int);
 string searchForVillager(const map<string, tuple<int, string, string>>&);
-void displayVillagerDetails(const map<string, tuple<int, string, string>>&);
+void displayVillagerDetails(map<string, tuple<int, string, string>>&);
 
 int main() {
     // declarations
@@ -39,7 +39,11 @@ int main() {
         }
         if (choice == 3) {
         // Search for vilager
-
+            string name = searchForVillager(villagerData);
+            if (name != "")
+                cout << name << " found." << endl;
+            else
+                cout << name << "not found." << endl;
         }
         if (choice == 4)
             cout << "Goodbye." << endl;
@@ -123,9 +127,12 @@ int menu() {
 void changeFriendship(map<string, tuple<int, string, string>>& m, string name, int amt) {
 // change this villager's friendship by the given amount
     auto it = m.find(name);
-    if (it != m.end())
-    // Key exists, safe to use .at()
-        get<1>(m.at(name)) += amt;
+    if (it != m.end()) { // Key exists, safe to use .at()
+        if(get<0>(m.at(name)) + amt >= 0) // make sure this change won't make friendship negative
+            get<0>(m.at(name)) += amt;
+        else
+            cout << "Cannot make friendship negative." << endl;
+    }
     else
     // name not found; this part is only necessary if we call this without first calling SearchForVillager
         cout << name << " not found." << endl;
@@ -146,7 +153,7 @@ string searchForVillager(const map<string, tuple<int,string,string>>& m) {
     }
 }
 
-void displayVillagerDetails(const map<string, tuple<int, string, string>>& m) {
+void displayVillagerDetails(map<string, tuple<int, string, string>>& m) { // I wanted to make the parameter const but that caused an error
 // output the data on every villager
     cout << "\nVillagers:" << endl;
     for (map<string, tuple<int, string, string>>::iterator it = m.begin(); 
