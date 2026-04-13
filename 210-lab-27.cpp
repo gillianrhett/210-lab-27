@@ -3,10 +3,12 @@
 #include <map>
 #include <tuple>
 #include <limits> // for input validation
+#include <string> // for getline
 using namespace std;
 
 int menu();
-void changeFriendship(map<string, tuple<int, string, string>>&, int);
+void changeFriendship(map<string, tuple<int, string, string>>&, string, int);
+string searchForVillager(const map<string, tuple<int, string, string>>&);
 
 int main() {
     // declarations
@@ -19,24 +21,30 @@ int main() {
     villagerData.insert({"Marshal", make_tuple(3, "Squirrel", "sulky")});
     villagerData.insert({"Hamlet", make_tuple(10, "Hamster", "hammy")});
 
-    int choice = 0;
-    while(!(1 <= choice && choice <= 4)) {
+    int choice = 1;
+    while((1 <= choice && choice <= 4)) {
         choice = menu();
         if (choice == 1) {
-        // Increase friendship
-
+        // Increase friendship for a given villager
+            string name = searchForVillager(villagerData);
+            if (name != "")
+                changeFriendship(villagerData, name, 1);
         }
         if (choice == 2) {
         // Decrease friendship
-
+            string name = searchForVillager(villagerData);
+            if (name != "")
+                changeFriendship(villagerData, name, -1);
         }
         if (choice == 3) {
         // Search for vilager
 
         }
+        if (choice == 4)
+            cout << "Goodbye." << endl;
     }
 
-    /*
+    /* from milestone 2
     // access the map using a range-based for loop
     cout << "Villagers and their friendship level, species, and catchphrase (range-based for loop):" << endl;
     for (const auto& [name, data] : villagerData) {
@@ -108,11 +116,21 @@ int menu() {
     return choice;
 }
 
-void changeFriendship(map<string, tuple<int, string, string>>& m, int amt) {
+void changeFriendship(map<string, tuple<int, string, string>>& m, string name, int amt) {
 // change every villager's friendship by the given amount
-    for (map<string, tuple<int, string, string>>::iterator it = m.begin(); 
-        it != m.end(); ++it) 
-    {
-        get<0>(it->second) += amt;
+    
+}
+
+string searchForVillager(const map<string, tuple<int,string,string>>& m) {
+    string searchKey;
+    cout << "Enter the name of the villager: ";
+    cin.ignore();
+    getline(cin, searchKey);
+    auto it = m.find(searchKey);
+    if (it != m.end())
+        return searchKey;
+    else {
+        cout << endl << searchKey << " not found." << endl;
+        return "";
     }
 }
