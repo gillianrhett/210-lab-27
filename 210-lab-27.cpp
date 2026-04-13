@@ -9,6 +9,7 @@ using namespace std;
 int menu();
 void changeFriendship(map<string, tuple<int, string, string>>&, string, int);
 string searchForVillager(const map<string, tuple<int, string, string>>&);
+void displayVillagerDetails(const map<string, tuple<int, string, string>>&);
 
 int main() {
     // declarations
@@ -22,7 +23,7 @@ int main() {
     villagerData.insert({"Hamlet", make_tuple(10, "Hamster", "hammy")});
 
     int choice = 1;
-    while((1 <= choice && choice <= 4)) {
+    while((1 <= choice && choice < 4)) {
         choice = menu();
         if (choice == 1) {
         // Increase friendship for a given villager
@@ -42,6 +43,9 @@ int main() {
         }
         if (choice == 4)
             cout << "Goodbye." << endl;
+        
+        // display the map contents after each operation
+        displayVillagerDetails(villagerData);
     }
 
     /* from milestone 2
@@ -117,11 +121,18 @@ int menu() {
 }
 
 void changeFriendship(map<string, tuple<int, string, string>>& m, string name, int amt) {
-// change every villager's friendship by the given amount
-    
+// change this villager's friendship by the given amount
+    auto it = m.find(name);
+    if (it != m.end())
+    // Key exists, safe to use .at()
+        get<1>(m.at(name)) += amt;
+    else
+    // name not found; this part is only necessary if we call this without first calling SearchForVillager
+        cout << name << " not found." << endl;
 }
 
 string searchForVillager(const map<string, tuple<int,string,string>>& m) {
+// take user input of name and return it if it's present in the map
     string searchKey;
     cout << "Enter the name of the villager: ";
     cin.ignore();
@@ -133,4 +144,15 @@ string searchForVillager(const map<string, tuple<int,string,string>>& m) {
         cout << endl << searchKey << " not found." << endl;
         return "";
     }
+}
+
+void displayVillagerDetails(const map<string, tuple<int, string, string>>& m) {
+// output the data on every villager
+    cout << "\nVillagers:" << endl;
+    for (map<string, tuple<int, string, string>>::iterator it = m.begin(); 
+        it != m.end(); ++it) 
+    {
+        cout << "\t" << it->first << "'s friendship level is " << get<0>(it->second) << ", species is " << get<1>(it->second) << ", and catchphrase is " << get<2>(it->second) << "." << endl;
+    }
+    cout << endl;
 }
