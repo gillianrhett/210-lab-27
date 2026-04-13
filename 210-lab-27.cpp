@@ -2,7 +2,11 @@
 #include <iostream>
 #include <map>
 #include <tuple>
+#include <limits> // for input validation
 using namespace std;
+
+int menu();
+void changeFriendship(map<string, tuple<int, string, string>>&, int);
 
 int main() {
     // declarations
@@ -13,7 +17,26 @@ int main() {
     villagerData["Audie"] = make_tuple(5, "Fox", "foxtrot");
     villagerData["Raymond"] = make_tuple(8, "Cat", "crisp");
     villagerData.insert({"Marshal", make_tuple(3, "Squirrel", "sulky")});
+    villagerData.insert({"Hamlet", make_tuple(10, "Hamster", "hammy")});
 
+    int choice = 0;
+    while(!(1 <= choice && choice <= 4)) {
+        choice = menu();
+        if (choice == 1) {
+        // Increase friendship
+
+        }
+        if (choice == 2) {
+        // Decrease friendship
+
+        }
+        if (choice == 3) {
+        // Search for vilager
+
+        }
+    }
+
+    /*
     // access the map using a range-based for loop
     cout << "Villagers and their friendship level, species, and catchphrase (range-based for loop):" << endl;
     for (const auto& [name, data] : villagerData) {
@@ -60,6 +83,36 @@ int main() {
     cout << "\nSize before clear: " << villagerData.size() << endl;
     villagerData.clear();
     cout << "Size after clear: " << villagerData.size() << endl;
-
+    */
     return 0;
+}
+
+int menu() {
+// display the menu and return the choice the user picked
+    int choice = 0;
+    cout << "1. Increase Friendship\n2. Decrease Friendship\n3. Search for Villager\n4. Exit" << endl;
+    cout << "Enter your choice: ";
+    while (!(choice >= 1 && choice <=4)) {
+        try {
+            cin >> choice;
+            if (cin.fail() || !(choice >= 1 && choice <=4))
+                throw invalid_argument("Invalid input. Enter a number 1, 2, 3, or 4.");
+        }
+        catch(invalid_argument& e)
+        {
+            cout << "Error: " << e.what() << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+    return choice;
+}
+
+void changeFriendship(map<string, tuple<int, string, string>>& m, int amt) {
+// change every villager's friendship by the given amount
+    for (map<string, tuple<int, string, string>>::iterator it = m.begin(); 
+        it != m.end(); ++it) 
+    {
+        get<0>(it->second) += amt;
+    }
 }
