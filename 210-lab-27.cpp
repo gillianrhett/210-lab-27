@@ -22,7 +22,6 @@ int main() {
     villagerData["Audie"] = make_tuple(5, "Fox", "foxtrot");
     villagerData["Raymond"] = make_tuple(8, "Cat", "crisp");
     villagerData.insert({"Marshal", make_tuple(3, "Squirrel", "sulky")});
-    villagerData.insert({"Hamlet", make_tuple(10, "Hamster", "hammy")});
 
     int choice = 1;
     while((1 <= choice && choice < 6)) {
@@ -118,7 +117,7 @@ int main() {
 int menu() {
 // display the menu and return the choice the user picked
     int choice = 0;
-    cout << "1. Add villager\n2. Delete villager\n 3. Increase Friendship"
+    cout << "1. Add villager\n2. Delete villager\n3. Increase Friendship"
     << "\n4. Decrease Friendship\n5. Search for Villager\n6. Exit" << endl;
     cout << "Enter your choice: ";
     while (!(choice >= 1 && choice <=6)) {
@@ -141,10 +140,10 @@ void changeFriendship(map<string, tuple<int, string, string>>& m, string name, i
 // change this villager's friendship by the given amount
     auto it = m.find(name);
     if (it != m.end()) { // Key exists, safe to use .at()
-        if(get<0>(m.at(name)) + amt >= 0) // make sure this change won't make friendship negative
+        if(get<0>(m.at(name)) + amt >= 0 || get<0>(m.at(name)) + amt > 10) // make sure this change won't make friendship negative
             get<0>(m.at(name)) += amt;
         else
-            cout << "Cannot make friendship negative." << endl;
+            cout << "Error: friendship can only be 0 to 10." << endl;
     }
     else
     // name not found; this part is only necessary if we call this without first calling SearchForVillager
@@ -179,13 +178,14 @@ void displayVillagerDetails(map<string, tuple<int, string, string>>& m) { // I w
 
 void addVillager(map<string, tuple<int, string, string>>& m) {
 // get user input to add a new villager to the map
+    // get the user input
     string name;
     int friendship = -1;
     string species;
     string catchphrase;
-    cout << "Enter name: ";
+    cout << "Villager name: ";
     cin >> name;
-    cout << "Enter friendship level: ";
+    cout << "Friendship level: ";
     while (friendship < 0) {
         try {
             cin >> friendship;
@@ -199,7 +199,14 @@ void addVillager(map<string, tuple<int, string, string>>& m) {
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
-    
+    cout << "Species: ";
+    cin >> species;
+    cout << "Catchphrase: ";
+    cin >> catchphrase;
+
+    // add the new villager to the map
+    m.insert({name, make_tuple(friendship, species, catchphrase)});
+    cout << name << " added." << endl;
 }
 
 void deleteVillager(map<string, tuple<int, string, string>>& m, string name) {
